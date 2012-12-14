@@ -1,13 +1,13 @@
 //
-//  DAViewController.h
+//  DATestItems.h
 //  ConceptScroll
 //
 //  Created by kernel on 14/12/12.
 //  Copyright (c) 2012 kernel@realm. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "DAItem.h"
 
-@interface DAViewController : UIViewController
-
+@interface DATestItems : NSObject
+@property (strong, nonatomic, readonly) NSArray *items;
 @end
