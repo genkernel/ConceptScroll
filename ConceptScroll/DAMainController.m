@@ -33,7 +33,7 @@
 	srand(time(0));
 	self.pager.defaultPage = arc4random() % self.model.items.count;
 	self.pager.looped = YES;
-	self.pager.minSwitchDistance = 200.;
+	self.pager.minSwitchDistance = 100.;
 	[self.pager reloadData];
 }
 
