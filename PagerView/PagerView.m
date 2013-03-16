@@ -63,6 +63,7 @@ static const CGFloat	kDefaultPanDistanceToSwitch = 150.;
 
 - (void)prepareView {
 	self.minSwitchDistance = kDefaultPanDistanceToSwitch;
+	self.clipsToBounds = YES;
 	
 	NSArray* arr = [[NSBundle mainBundle] loadNibNamed:@"PagerView" owner:self options:nil];
 	UIView* view = [arr objectAtIndex:0];
