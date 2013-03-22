@@ -3,8 +3,11 @@ ConceptScroll
 
 Pages Scroller with looping support.<br />
 It mimics UIScrollView functionality with paging = YES and additionaly introduces 'looping' mode BOOL property.<br />
+See https://developer.apple.com/videos/wwdc/2011/?id=104 for nice tricks on UIScrollView by Apple.<br />
 <br />
 Demo: http://youtu.be/AxZhPDLQpnw<br />
+<br />
+https://developer.apple.com/videos/wwdc/2011/?id=104
 <br />
 This is iOS example project that uses PagerView component.<br />
 PagerView mimics UIScrollView component with paging mode enabled.<br />
