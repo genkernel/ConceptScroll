@@ -135,12 +135,11 @@ static const CGFloat	kDefaultPanDistanceToSwitch = 150.;
 
 // YES when scrolling to left is possible.
 - (NSUInteger)hasPrevView {
-	return !(!self.looped && 0==self.selectedIndex);
+	return !(!self.looped && 0==self.selectedIndex) && totalItemsCount > 1;
 }
-
 // YES when scrolling to right is possible.
 - (NSUInteger)hasNextView {
-	return !(!self.looped && totalItemsCount-1==self.selectedIndex);
+	return !(!self.looped && totalItemsCount-1==self.selectedIndex) && totalItemsCount > 1;
 }
 
 - (void)setupView {
@@ -353,15 +352,15 @@ static const CGFloat	kDefaultPanDistanceToSwitch = 150.;
 	__block NSArray *displayStates = nil;
 	
 	if (animated) {
-		[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+		//[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 		
-		[UIView animateWithDuration:0.6 delay:0.0 
+		[UIView animateWithDuration:.350 delay:.0
 							options:UIViewAnimationOptionCurveEaseOut 
 						 animations:^{
 							 displayStates = [self renderIndex:index];
 						 }
 						 completion:^(BOOL finished) {
-							 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+							 //[[UIApplication sharedApplication] endIgnoringInteractionEvents];
 							 
 							 for (int i=0; i<renderItemsCount; i++) {
 								 PagerItemViewContainer* container = self.views[i];

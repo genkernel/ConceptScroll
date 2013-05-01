@@ -7,8 +7,6 @@ See https://developer.apple.com/videos/wwdc/2011/?id=104 for nice tricks on UISc
 <br />
 Demo: http://youtu.be/AxZhPDLQpnw<br />
 <br />
-https://developer.apple.com/videos/wwdc/2011/?id=104
-<br />
 This is iOS example project that uses PagerView component.<br />
 PagerView mimics UIScrollView component with paging mode enabled.<br />
 Plus it implements additional 'looping' feature: scrolls to the very first page after the last one.<br />
