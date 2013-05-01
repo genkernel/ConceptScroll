@@ -1,33 +1,26 @@
 //
-//  PageScroller.h
+//  PagerView.h
 //  Copyright (c) 2011 kernel@realm. All rights reserved.
-//
 //
 
 #import "PagerItemViewContainer.h"
 
-typedef	enum {
-	PageSCrollerPositionLeft, 
-	PageSCrollerPositionRight, 
-	PageSCrollerPositionCenter
-} PageScrollerPositions;
-
 @protocol PagerViewDelegate, PagerViewDataSource;
 
-
 @interface PagerView : UIView
-@property (weak, nonatomic) IBOutlet id<PagerViewDelegate>	delegate;
-@property (weak, nonatomic) IBOutlet id<PagerViewDataSource>	dataSource;
+@property (weak, nonatomic) IBOutlet id<PagerViewDelegate> delegate;
+@property (weak, nonatomic) IBOutlet id<PagerViewDataSource> dataSource;
 
-@property (nonatomic, getter=isLooped) BOOL	looped;
-@property (nonatomic) BOOL	panGestureEnabled;
-// TODO: - Implement.
-//@property (assign, nonatomic) BOOL	bounces;
+@property (nonatomic, getter=isLooped) BOOL looped;
+@property () BOOL panGestureEnabled;
 // Default page index to display at the beggining.
-@property (nonatomic) NSUInteger defaultPage;
-@property (nonatomic) NSUInteger customRenderPoolSize;
-@property (nonatomic) CGFloat minSwitchDistance;
-@property (nonatomic, readonly) NSUInteger selectedIndex;
+@property () NSUInteger defaultPage;
+@property () NSUInteger customRenderPoolSize;
+@property () CGFloat minSwitchDistance;
+@property (readonly) NSUInteger selectedIndex;
+
+// TODO: Implement bounces.
+//@property () BOOL	bounces;
 
 @property (strong, nonatomic, readonly) UIView *backgroundView;
 
@@ -36,7 +29,7 @@ typedef	enum {
 - (void)navigateRightAnimated:(BOOL)animated;
 - (void)prepare;
 - (void)reloadData;
-- (PagerItemView*)dequeueView;
+- (PagerItemView *)dequeueView;
 @end
 
 
@@ -49,6 +42,6 @@ typedef	enum {
 @protocol PagerViewDataSource<NSObject>
 @required
 - (NSUInteger)numberOfPages;
-- (PagerItemView *)pager:(PagerView*)pagerView pageAtIndex:(NSUInteger)index;
+- (PagerItemView *)pager:(PagerView *)pagerView pageAtIndex:(NSUInteger)index;
 @end
 

@@ -8,19 +8,10 @@
 
 @implementation PagerItemViewContainer
 
-+ (CGSize)containerViewSize {
-	NSLog(@"ERR. Redefine dummy impl. %s", __PRETTY_FUNCTION__);
-	return CGSizeZero;
-}
-
 - (id)initWithFrame:(CGRect)frame {
 	self = [super initWithFrame:frame];
 	if (self) {
-		self.backgroundColor = [UIColor clearColor];
-		self.autoresizingMask = (NSUInteger)-1;	// Set all.
-		
-		// PagerItemViewDisplayStateHidden: default state with alpha=0.
-		self.alpha = .0;
+		[self prepareView];
 	}
 	return self;
 }
@@ -28,17 +19,21 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super initWithCoder:aDecoder];
 	if (self) {
-		self.backgroundColor = [UIColor clearColor];
-		self.autoresizingMask = (NSUInteger)-1;	// Set all.
-		
-		// PagerItemViewDisplayStateHidden: default state with alpha=0.
-		self.alpha = .0;
+		[self prepareView];
 	}
 	return self;
 }
 
+- (void)prepareView {
+	self.backgroundColor = UIColor.clearColor;
+	self.autoresizingMask = (NSUInteger)-1;	// All masks.
+	
+	// PagerItemViewDisplayStateHidden: default state with alpha=0.
+	self.alpha = .0;
+}
+
 - (NSString*)description {
-	return [NSString stringWithFormat:@"[%@. %@. userView: [%@]]", NSStringFromClass([self class]), NSStringFromCGRect(self.frame), self.userView];
+	return [NSString stringWithFormat:@"[%@. %@. userView: [%@]]", NSStringFromClass(self.class), NSStringFromCGRect(self.frame), self.userView];
 }
 
 - (PagerItemView *)userView {

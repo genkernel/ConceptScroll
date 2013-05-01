@@ -13,9 +13,6 @@ typedef enum {
 } PagerItemViewDisplayStates;
 
 @interface PagerItemViewContainer : UIView
-//@property (assign, nonatomic, getter=isDisplayed) BOOL displayed;
-@property (assign, nonatomic) PagerItemViewDisplayStates displayState;
+@property (nonatomic) PagerItemViewDisplayStates displayState;
 @property (strong, nonatomic, readonly) PagerItemView *userView;
-
-+ (CGSize)containerViewSize;
 @end

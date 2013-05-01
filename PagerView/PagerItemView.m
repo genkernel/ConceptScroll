@@ -36,7 +36,7 @@ typedef enum {
 }
 
 - (NSString*)description {
-	return [NSString stringWithFormat:@"[%@. DataSource: %d]", NSStringFromClass([self class]), self.datasourceIndex];
+	return [NSString stringWithFormat:@"[%@. DataSource: %d]", NSStringFromClass(self.class), self.datasourceIndex];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
