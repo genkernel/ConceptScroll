@@ -17,7 +17,8 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 @property (strong, nonatomic) UIPanGestureRecognizer* pan;
 @property () CGFloat panDistanceOffset;
 
-@property (strong, nonatomic) NSMutableSet *dequeuedViews;
+// Dictionary format: <identifier (NSString)> => <views (NSMutableSet)>
+@property (strong, nonatomic) NSMutableDictionary *dequeuedViews;
 @property (strong, nonatomic) NSMutableArray *views;
 
 // pageContainerClass - PagerItemViewContainer based class.
@@ -159,11 +160,19 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 	}
 	
 	// On reloading - use remnant views as dequeued(cached) views.
-	self.dequeuedViews = [NSMutableSet setWithCapacity:renderItemsCount];
+	self.dequeuedViews = NSMutableDictionary.dictionary;
 	for (PagerItemViewContainer *container in self.views) {
 		if (container.subviews.count > 0) {
-			UIView *userView = container.subviews[0];
-			[self.dequeuedViews addObject:userView];
+			PagerItemView *userView = container.subviews[0];
+			
+			if (userView.identifier) {
+				NSMutableSet *views = self.dequeuedViews[userView.identifier];
+				if (!views) {
+					views = NSMutableSet.set;
+					self.dequeuedViews[userView.identifier] = views;
+				}
+				[views addObject:userView];
+			}
 		}
 	}
 	// Remove * subviews.
@@ -280,7 +289,14 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 	// Move the most right view to the left corner.
 	[self.viewsContainer sendSubviewToBack:moveView];
 	// Mark user's view as reusable.
-	[self.dequeuedViews addObject:moveView.userView];
+	if (moveView.userView.identifier) {
+		NSMutableSet *views = self.dequeuedViews[moveView.userView.identifier];
+		if (!views) {
+			views = NSMutableSet.set;
+			self.dequeuedViews[moveView.userView.identifier] = views;
+		}
+		[views addObject:moveView.userView];
+	}
 	
 	NSMutableArray* arr = [NSMutableArray arrayWithCapacity:renderItemsCount];
 	[arr addObject:moveView];
@@ -294,7 +310,7 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 }
 
 - (void)navigateRightAnimated:(BOOL)animated {
-	PagerItemViewContainer* moveView = [self.views objectAtIndex:0];
+	PagerItemViewContainer *moveView = [self.views objectAtIndex:0];
 	moveView.displayState = PagerItemViewDisplayStateHidden;
 	
 	if (totalItemsCount == renderItemsCount) {
@@ -305,7 +321,14 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 	// Move the most left view to the right corner.
 	[self.viewsContainer sendSubviewToBack:moveView];
 	// Mark user's view as reusable.
-	[self.dequeuedViews addObject:moveView.userView];
+	if (moveView.userView.identifier) {
+		NSMutableSet *views = self.dequeuedViews[moveView.userView.identifier];
+		if (!views) {
+			views = NSMutableSet.set;
+			self.dequeuedViews[moveView.userView.identifier] = views;
+		}
+		[views addObject:moveView.userView];
+	}
 	
 	NSMutableArray* arr = [NSMutableArray arrayWithCapacity:renderItemsCount];
 	for (int i = 1; i < renderItemsCount; i++) {
@@ -456,11 +479,15 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 	isRenderable = YES;
 }
 
-- (UIView*)dequeueView {
-	UIView* reusableView = [self.dequeuedViews anyObject];
-	if (reusableView) {
-		[self.dequeuedViews removeObject:reusableView];
+- (PagerItemView *)dequeueViewWithIdentifier:(NSString *)identifier {
+	PagerItemView *reusableView = nil;
+	
+	NSMutableSet *views = self.dequeuedViews[identifier];
+	if (views.count) {
+		reusableView = views.anyObject;
+		[views removeObject:reusableView];
 	}
+	
 	return reusableView;
 }
 

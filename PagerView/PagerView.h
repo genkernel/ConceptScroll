@@ -29,7 +29,7 @@
 - (void)navigateRightAnimated:(BOOL)animated;
 - (void)prepare;
 - (void)reloadData;
-- (PagerItemView *)dequeueView;
+- (PagerItemView *)dequeueViewWithIdentifier:(NSString *)identifier;
 @end
 
 
