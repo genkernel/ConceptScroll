@@ -14,11 +14,12 @@
 
 @implementation DAItemController
 
-- (void)viewDidUnload {
+- (void)didReceiveMemoryWarning {
+	[super didReceiveMemoryWarning];
+	
 	[self setMainImg:nil];
 	[self setTitleLabel:nil];
 	[self setHintLabel:nil];
-	[super viewDidUnload];
 }
 
 - (void)loadItem:(DAItem *)item {

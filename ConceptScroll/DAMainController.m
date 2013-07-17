@@ -57,12 +57,15 @@
 - (PagerItemView *)pager:(PagerView*)pagerView pageAtIndex:(NSUInteger)idx
 {
 	DAItemController *ctrl = nil;
+	NSString *name = NSStringFromClass(DAItemController.class);
 	
-	PagerItemView* v = [pagerView dequeueView];
+	PagerItemView* v = [pagerView dequeueViewWithIdentifier:name];
 	if (!v) {
 		// Create new view ctrl.
-		ctrl = [[DAItemController alloc] initWithNibName:NSStringFromClass([DAItemController class]) bundle:nil];
-		//ctrl.view.x = ctrl.view.x;	// Force view creation.
+		ctrl = [[DAItemController alloc] initWithNibName:name bundle:nil];
+		
+		((PagerItemView *)ctrl.view).identifier = name;
+		
 		[self.ctrls addObject:ctrl];
 		ctrl.view.tag = tag;
 		tag++;
