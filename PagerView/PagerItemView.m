@@ -18,14 +18,8 @@ typedef enum {
 @implementation PagerItemView {
 	PagerItemViewTouchState touchState;
 }
-
-- (id)initWithFrame:(CGRect)frame {
-	self = [super initWithFrame:frame];
-	if (self) {
-		self.datasourceIndex = NSNotFound;
-	}
-	return self;
-}
+// Synthesize explicitly to generate readwrite.
+@synthesize datasourceIndex;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super initWithCoder:aDecoder];

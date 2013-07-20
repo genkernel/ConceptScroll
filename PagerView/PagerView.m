@@ -42,14 +42,6 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 }
 @dynamic panGestureEnabled, itemContainerSize;
 
-- (id)initWithFrame:(CGRect)rect {
-	self = [super initWithFrame:rect];
-	if (self) {
-		[self prepareView];
-	}
-	return self;
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	self = [super initWithCoder:aDecoder];
 	if (self) {
@@ -142,12 +134,12 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 	}
 	//NSLog(@"renderItemsCount: %d", renderItemsCount);
 	
-	CGFloat centerX = self.frame.size.width/2;
 	// Left renderable items count.
 	NSUInteger ln = 0;
 	if (renderItemsCount > 0) {
 		ln = (renderItemsCount - 1) / 2;
 	}
+	
 	// Determine the most left(first) datasource item index.
 	NSUInteger startIndex = self.defaultPage;
 	for (int i = 0; i < ln; i++) {
@@ -175,10 +167,8 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 			}
 		}
 	}
-	// Remove * subviews.
-	for (UIView *v in self.viewsContainer.subviews) {
-		[v removeFromSuperview];
-	}
+	
+	[self.viewsContainer removeAllSubviews];
 	
 	// Create new view containers.
 	NSUInteger displayIndex = startIndex;
@@ -188,8 +178,10 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 			displayIndex = [self nextIndexForIndex:displayIndex];
 		}
 		
-		PagerItemViewContainer *container = self.pageContainerClass.new;
-		container.frame = CGRectMake(.0, .0, self.itemContainerSize.width, self.itemContainerSize.height);
+		CGRect r = CGRectMake(.0, .0, self.itemContainerSize.width, self.itemContainerSize.height);
+		
+		PagerItemViewContainer *container = [self.pageContainerClass.alloc initWithFrame:r];
+		container.translatesAutoresizingMaskIntoConstraints = NO;
 		
 		BOOL needsDisplay = YES;
 		if (!self.looped) {
@@ -204,11 +196,11 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 		int k = i - ln;
 		CGFloat value = self.itemContainerSize.width;
 		CGFloat offset = k * value;
-		CGFloat x = centerX + offset;
-		container.center = CGPointMake(x, container.center.y);
 		
 		[self.views addObject:container];
 		[self.viewsContainer addSubview:container];
+		
+		[container applyFullscreenConstraintsWithOffset:offset];
 	}
 }
 
@@ -345,16 +337,13 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 	__block NSArray *displayStates = nil;
 	
 	void (^loadItem)(PagerItemViewContainer *, NSUInteger) = ^(PagerItemViewContainer *container, NSUInteger displayIndex){
-		PagerItemView *v = container.userView;
-		
 		//NSLog(@"REQUEST. %d --> %d",  v.datasourceIndex, displayIndex);
-		v = [self requestViewForIndex:displayIndex];
+		
+		PagerItemView *v = [self requestViewForIndex:displayIndex];
 		v.datasourceIndex = displayIndex;
 		
-		// removeAllSubviews.
-		for (UIView * v in container.subviews) {
-			[v removeFromSuperview];
-		}
+		[container removeAllSubviews];
+		
 		v.frame = container.bounds;
 		[container addSubview:v];
 	};
@@ -379,16 +368,15 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 		}
 	};
 	
+	displayStates = [self renderIndex:index];
+	
 	if (animated) {
-		//[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 		[UIView animateWithDuration:.350 delay:.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-			displayStates = [self renderIndex:index];
+			[self layoutIfNeeded];
 		} completion:^(BOOL finished) {
-			//[[UIApplication sharedApplication] endIgnoringInteractionEvents];
 			completeTransition();
 		}];
 	} else {
-		displayStates = [self renderIndex:index];
 		completeTransition();
 	}
 }
@@ -399,13 +387,12 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 	}
 	NSMutableArray *displayStates = NSMutableArray.array;
 	
-	CGFloat centerX = CGRectGetWidth(self.frame) / 2;
-	
 	// Left renderable items count.
 	NSUInteger ln = 0;
 	if (renderItemsCount > 0) {
 		ln = (renderItemsCount - 1) / 2;
 	}
+	
 	// Determine the most left(first) datasource item index.
 	NSUInteger startIndex = index;
 	for (int i = 0; i < ln; i++) {
@@ -434,8 +421,7 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 		int k = i - ln;
 		CGFloat value = self.itemContainerSize.width;
 		CGFloat offset = k * value;
-		CGFloat x = centerX + offset;
-		container.center = CGPointMake(x, container.center.y);
+		container.centerX.constant = offset;
 		
 		// Determine display status.
 		BOOL needsDisplay = YES;
@@ -508,9 +494,9 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 	}
 	
 	if (UIGestureRecognizerStateChanged == gr.state) {
-		for (UIView *container in self.views) {
+		for (PagerItemViewContainer *container in self.views) {
 			CGFloat offset = translationPoint.x - self.panDistanceOffset;
-			container.center = CGPointMake(container.center.x + offset, container.center.y);
+			container.centerX.constant += offset;
 		}
 		self.panDistanceOffset = translationPoint.x;
 		

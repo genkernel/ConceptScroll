@@ -15,4 +15,7 @@ typedef enum {
 @interface PagerItemViewContainer : UIView
 @property (nonatomic) PagerItemViewDisplayStates displayState;
 @property (strong, nonatomic, readonly) PagerItemView *userView;
+
+@property (strong, nonatomic, readonly) NSLayoutConstraint *centerX;
+- (void)applyFullscreenConstraintsWithOffset:(CGFloat)x;
 @end
