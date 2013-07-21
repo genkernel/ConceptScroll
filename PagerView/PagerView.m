@@ -10,6 +10,10 @@ static const CGFloat DefaultPanDistanceToSwitch = 150.;
 static const NSString *ViewState = @"ViewState";
 static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 
+@interface UIView (PagerView)
+- (void)removeAllSubviews;
+@end
+
 @interface PagerView () <PagerItemViewDelegate>
 @property (strong, nonatomic, readwrite) IBOutlet UIView *backgroundView;
 @property (strong, nonatomic) IBOutlet UIView *viewsContainer;
@@ -523,6 +527,17 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 - (void)itemTapped:(PagerItemView *)itemView {
 	if ([self.delegate respondsToSelector:@selector(pager:viewDidTap:withItem:)]) {
 		[self.delegate pager:self viewDidTap:itemView withItem:itemView.datasourceIndex];
+	}
+}
+
+@end
+
+
+@implementation UIView (PagerView)
+
+- (void)removeAllSubviews {
+	for (UIView *view in self.subviews) {
+		[view removeFromSuperview];
 	}
 }
 

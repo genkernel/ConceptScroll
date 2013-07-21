@@ -34,7 +34,10 @@
 	self.pager.defaultPage = arc4random() % self.model.items.count;
 	self.pager.looped = YES;
 	self.pager.minSwitchDistance = 100.;
-	[self.pager reloadData];
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.pager reloadData];
+	});
 }
 
 - (void)viewDidUnload {
