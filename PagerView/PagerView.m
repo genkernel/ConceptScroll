@@ -219,6 +219,7 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 - (void)reloadData {
 	totalItemsCount = [self.dataSource numberOfPages];
 	
+	isRenderable = NO;
 	_selectedIndex = self.defaultPage;
 	[self displayPage:self.selectedIndex animated:YES];
 }
