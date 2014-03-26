@@ -197,7 +197,7 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 		container.displayState = needsDisplay ? PagerItemViewDisplayStateLoading : PagerItemViewDisplayStateHidden;
 		//container.x += i * container.width;
 		
-		int k = i - ln;
+		int k = i - (int)ln;
 		CGFloat value = self.itemContainerSize.width;
 		CGFloat offset = k * value;
 		
@@ -423,7 +423,7 @@ static const NSString *ViewDataSourceIndex = @"ViewDataSourceIndex";
 		[displayStates addObject:stateInfo];
 		
 		// Center container view.
-		int k = i - ln;
+		int k = i - (int)ln;
 		CGFloat value = self.itemContainerSize.width;
 		CGFloat offset = k * value;
 		container.centerX.constant = offset;
